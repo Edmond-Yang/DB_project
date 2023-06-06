@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>任務查詢頁面</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <!--<link rel="stylesheet" href="../General Style.css">-->
+</head>
+
+<body>
+<a href="./home page.html"><img src="./img/little logo.png"></a>
+
+    <div class="main_function">
+        <input type="button" onclick="location.href='./quest page.html';" value="任務查詢">
+        <input type="button" onclick="location.href='./gear page.html';" value="裝備查詢">
+        <input type="button" onclick="location.href='./NPC page.html';" value="NPC查詢">
+        <input type="button" onclick="location.href='./monster page.html';" value="怪物查詢">
+    </div>
+
+    <div id="quest_search_part">
+        <select id="search_by_what">
+            <option value="">請選擇查詢方式</option>
+            <option value="search_by_name">以任務、前置任務名稱查詢</option>
+            <option value="search_by_NPC">以關聯NPC查詢</option>
+            <option value="search_by_monster">以討伐怪物查詢</option>
+            <option value="search_by_exp">以獲得總經驗值量查詢</option>
+        </select>
+        <input type="button" value="確認" id="check">
+
+        <p id="max_input">最小值 : <input type="number" id="num_min"></p>
+        <p id="min_input">最大值 : <input type="number" id="num_max"></p>
+        <input type="text" id="text_input">
+        <input type="submit" value="送出" id="submit">
+
+        <p id="error_message"></p>
+    </div>
+
+    <table id="data_part" style="border:3px #cccccc solid;" cellpadding="10" border='1'>
+        <thead>
+            <tr>
+                <th rowspan="2">任務名稱</th>
+                <th>接收NPC</th>
+                <th rowspan="2">前置任務</th>
+                <th rowspan="2">總經驗值</th>
+                <th>討伐怪物-1</th>
+                <th>討伐數量-1</th>
+            </tr>
+            <tr>
+                <th>回報NPC</th>
+                <th>討伐怪物-2</th>
+                <th>討伐數量-2</th>
+            </tr>
+        </thead>
+    </table>
+</body>
+
+<script>
+    $("#max_input, #min_input, #text_input, #submit").hide();
+
+    $("#check").click(function() {
+        $("#max_input, #min_input, #text_input, #submit").hide();
+
+        let drop_down_list = $("#search_by_what").val();
+        if(drop_down_list == "search_by_exp") {
+            $("#max_input, #min_input").delay(300).fadeIn(300);
+        } else if(drop_down_list == "search_by_name") {
+            $("#text_input").val("").attr('placeholder', "請輸入任務名稱").delay(300).fadeIn(300);
+        } else if(drop_down_list == "search_by_NPC") {
+            $("#text_input").val("").attr('placeholder', "請輸入NPC名稱").delay(300).fadeIn(300);
+        } else if(drop_down_list == "search_by_monster") {
+            $("#text_input").val("").attr('placeholder', "請輸入怪物名稱").delay(300).fadeIn(300);
+        }
+
+        $("#submit").delay(300).fadeIn(300);
+    });
+
+    $("#submit").click(function() {
+        $("#error_message").hide();
+        let drop_down_list = $("#search_by_what").val();
+        if(drop_down_list == "search_by_exp") {
+            let min = parseInt($("#num_min").val());
+            let max = parseInt($("#num_max").val());
+            
+            if (min <= 0 || max <= 0) {
+                $("#error_message").html("輸入錯誤 - 最大值與最小值必須大於0");
+            } else if(min > max) {
+                $("#error_message").html("輸入錯誤 - 最大值必須大於/等於最小值");
+            } else {
+                $("#error_message").html("輸入正確 - 正在取得資料");
+            }
+
+            $("#error_message").delay(300).fadeIn(300);
+            console.log(min);
+            console.log(max);
+        } else {
+            let input = $("#text_input").val();
+            console.log(input);
+        }
+    });
+</script>
+
+</html>
