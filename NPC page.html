@@ -45,6 +45,7 @@
 
 <script>
     $("#text_input, #submit").hide();
+    $("#error_message").hide();
 
     $("#check").click(function() {
         $("#text_input, #submit").hide();
@@ -58,12 +59,26 @@
             $("#text_input").val("").attr('placeholder', "請輸入裝備名稱").delay(300).fadeIn(300);
         }
 
-        $("#submit").delay(300).fadeIn(300);
+        if(drop_down_list != "") {
+            $("#submit").delay(300).fadeIn(300);
+        }
+
+        $("#error_message").hide();
     });
 
     $("#submit").click(function() {
         $("#error_message").hide();
+
         let input = $("#text_input").val();
+        if(input.length == 0) {
+            $("#error_message").html("輸入錯誤 - 不能為空");
+        } else if(parseInt(input[0]) >= 0 && parseInt(input[0]) <= 9){
+            $("#error_message").html("輸入錯誤 - 開頭不能為數字");
+        } else {
+            $("#error_message").html("輸入正確 - 正在取得資料");
+        }
+
+        $("#error_message").delay(300).fadeIn(300);
         console.log(input);
     });
 </script>
