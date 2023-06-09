@@ -35,7 +35,6 @@
             <option value="search_by_place">以所在地點查詢</option>
             <option value="search_by_gear">以取得裝備查詢</option>
         </select>
-        <input type="button" value="確認" id="check">
 
         <input type="text" id="text_input">
         <input type="submit" value="送出" id="submit">
@@ -58,20 +57,20 @@
     $("#text_input, #submit").hide();
     $("#error_message").hide();
 
-    $("#check").click(function() {
+    $("#search_by_what").change(function() {
         $("#text_input, #submit").hide();
 
         let drop_down_list = $("#search_by_what").val();
         if(drop_down_list == "search_by_name") {
-            $("#text_input").val("").attr('placeholder', "請輸入NPC名").delay(300).fadeIn(300);
+            $("#text_input").val("").attr('placeholder', "請輸入NPC名").delay(200).fadeIn(200);
         } else if(drop_down_list == "search_by_place") {
-            $("#text_input").val("").attr('placeholder', "請輸入地圖名稱").delay(300).fadeIn(300);
+            $("#text_input").val("").attr('placeholder', "請輸入地圖名稱").delay(200).fadeIn(200);
         } else if(drop_down_list == "search_by_gear") {
-            $("#text_input").val("").attr('placeholder', "請輸入裝備名稱").delay(300).fadeIn(300);
+            $("#text_input").val("").attr('placeholder', "請輸入裝備名稱").delay(200).fadeIn(200);
         }
 
         if(drop_down_list != "") {
-            $("#submit").delay(300).fadeIn(300);
+            $("#submit").delay(200).fadeIn(200);
         }
 
         $("#error_message").hide();
@@ -89,7 +88,7 @@
             $("#error_message").html("輸入正確 - 正在取得資料");
         }
 
-        $("#error_message").delay(300).fadeIn(300);
+        $("#error_message").delay(200).fadeIn(200);
         console.log(input);
     });
 </script>

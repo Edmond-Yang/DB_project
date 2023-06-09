@@ -36,7 +36,6 @@
             <option value="search_by_monster">以討伐怪物查詢</option>
             <option value="search_by_exp">以獲得總經驗值量查詢</option>
         </select>
-        <input type="button" value="確認" id="check">
 
         <p id="max_input">最小值 : <input type="number" id="num_min"></p>
         <p id="min_input">最大值 : <input type="number" id="num_max"></p>
@@ -51,14 +50,18 @@
             <tr>
                 <th rowspan="2">任務名稱</th>
                 <th>接收NPC</th>
+                <th>接收NPC所在地</th>
                 <th rowspan="2">前置任務</th>
                 <th rowspan="2">總經驗值</th>
                 <th>討伐怪物-1</th>
+                <th>怪物-1所在地</th>
                 <th>討伐數量-1</th>
             </tr>
             <tr>
                 <th>回報NPC</th>
+                <th>回報NPC所在地</th>
                 <th>討伐怪物-2</th>
+                <th>怪物-2所在地</th>
                 <th>討伐數量-2</th>
             </tr>
         </thead>
@@ -69,22 +72,22 @@
     $("#max_input, #min_input, #text_input, #submit").hide();
     $("#error_message").hide();
 
-    $("#check").click(function() {
+    $("#search_by_what").change(function() {
         $("#max_input, #min_input, #text_input, #submit").hide();
 
         let drop_down_list = $("#search_by_what").val();
         if(drop_down_list == "search_by_exp") {
-            $("#max_input, #min_input").delay(300).fadeIn(300);
+            $("#max_input, #min_input").delay(200).fadeIn(200);
         } else if(drop_down_list == "search_by_name") {
-            $("#text_input").val("").attr('placeholder', "請輸入任務名稱").delay(300).fadeIn(300);
+            $("#text_input").val("").attr('placeholder', "請輸入任務名稱").delay(200).fadeIn(200);
         } else if(drop_down_list == "search_by_NPC") {
-            $("#text_input").val("").attr('placeholder', "請輸入NPC名稱").delay(300).fadeIn(300);
+            $("#text_input").val("").attr('placeholder', "請輸入NPC名稱").delay(200).fadeIn(200);
         } else if(drop_down_list == "search_by_monster") {
-            $("#text_input").val("").attr('placeholder', "請輸入怪物名稱").delay(300).fadeIn(300);
+            $("#text_input").val("").attr('placeholder', "請輸入怪物名稱").delay(200).fadeIn(200);
         }
 
         if(drop_down_list != "") {
-            $("#submit").delay(300).fadeIn(300);
+            $("#submit").delay(200).fadeIn(200);
         }
 
         $("#error_message").hide();
@@ -105,7 +108,7 @@
                 $("#error_message").html("輸入正確 - 正在取得資料");
             }
 
-            $("#error_message").delay(300).fadeIn(300);
+            $("#error_message").delay(200).fadeIn(200);
             console.log(min);
             console.log(max);
         } else {
@@ -118,7 +121,7 @@
                 $("#error_message").html("輸入正確 - 正在取得資料");
             }
 
-            $("#error_message").delay(300).fadeIn(300);
+            $("#error_message").delay(200).fadeIn(200);
             console.log(input);
         }
     });
