@@ -2,7 +2,8 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
-import sqlite3, uvicorn
+#import sqlite3
+import uvicorn
 
 app = FastAPI(
     title='DB project'
@@ -11,8 +12,8 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-conn = sqlite3.connect('data.db')
-cursor = conn.cursor()
+#conn = sqlite3.connect('data.db')
+#cursor = conn.cursor()
 
 @app.get('/', response_class=HTMLResponse)
 async def main(request: Request):
