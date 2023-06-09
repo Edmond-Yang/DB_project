@@ -5,16 +5,27 @@
     <title>裝備查詢頁面</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!--<link rel="stylesheet" href="../General Style.css">-->
+    <script>
+        var dict = {
+            'quest': "{{url_for('htmlQuery', category='quest')}}", 
+            'gear': "{{url_for('htmlQuery', category='gear')}}", 
+            'NPC': "{{url_for('htmlQuery', category='NPC')}}", 
+            'monster':"{{url_for('htmlQuery', category='monster')}}"
+        }
+        function getURL(name){
+            return dict[name]
+        }
+    </script>
 </head>
 
 <body>
-<a href="./home page.html"><img src="./img/little logo.png"></a>
+    <a href="{{ url_for('main') }}"><img src="{{ url_for('static', path='/img/little logo.png') }}"></a>
 
     <div class="main_function">
-        <input type="button" onclick="location.href='./quest page.html';" value="任務查詢">
-        <input type="button" onclick="location.href='./gear page.html';" value="裝備查詢">
-        <input type="button" onclick="location.href='./NPC page.html';" value="NPC查詢">
-        <input type="button" onclick="location.href='./monster page.html';" value="怪物查詢">
+        <input type="button" onclick="location.href=getURL('quest');" value="任務查詢">
+        <input type="button" onclick="location.href=getURL('gear');" value="裝備查詢">
+        <input type="button" onclick="location.href=getURL('NPC');" value="NPC查詢">
+        <input type="button" onclick="location.href=getURL('monster');" value="怪物查詢">
     </div>
 
     <div id="gear_search_part">
