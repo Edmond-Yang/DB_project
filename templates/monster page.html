@@ -38,6 +38,7 @@
             <option value="search_by_atk">以攻擊力查詢</option>
             <option value="search_by_def">以防禦力查詢</option>
             <option value="search_by_exp">以掉落經驗查詢</option>
+            <option value="search_by_gear">以掉落裝備查詢</option>
         </select>
 
         <p id="max_input">最小值 : <input type="number" id="num_min"></p>
@@ -76,6 +77,8 @@
             $("#text_input").val("").attr('placeholder', "請輸入怪物名稱").delay(200).fadeIn(200);
         } else if(drop_down_list == "search_by_place") {
             $("#text_input").val("").attr('placeholder', "請輸入所在地").delay(200).fadeIn(200);
+        } else if(drop_down_list == "search_by_gear") {
+            $("#text_input").val("").attr('placeholder', "請輸入裝備名稱").delay(200).fadeIn(200);
         } else if(drop_down_list == ""){
             $("#max_input, #min_input, #text_input, #submit").hide();
         } else {
@@ -92,7 +95,7 @@
     $("#submit").click(function() {
         $("#error_message").hide();
         let drop_down_list = $("#search_by_what").val();
-        if(drop_down_list == "search_by_name" || drop_down_list == "search_by_place") {
+        if(drop_down_list == "search_by_name" || drop_down_list == "search_by_place" || drop_down_list == "search_by_gear") {
             let input = $("#text_input").val();
             if(input.length === 0) {
                 $("#error_message").html("輸入錯誤 - 不能為空");
