@@ -2,3 +2,4 @@ fastapi
 uvicorn
 pysqlite3
 jinja2
+pydantic
