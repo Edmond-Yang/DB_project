@@ -96,8 +96,10 @@ def callGear(subStmt: list):
     for q in query:
         q.insert(1, 'NPC')
     
-    stmt = "SELECT 裝備名稱, 來源怪物名稱, 所在地圖, 來源怪物名稱, 裝備.攻擊力, 玩家需求等級 FROM 裝備 JOIN 怪物 ON 來源怪物名稱 = 怪物名稱 " + subStmt[1]
+    stmt = "SELECT 裝備名稱, 來源怪物名稱, 所在地圖, 裝備.攻擊力, 玩家需求等級 FROM 裝備 JOIN 怪物 ON 來源怪物名稱 = 怪物名稱 " + subStmt[1]
     temp = executeQuery(stmt)
+    
+    print(temp)
     
     for t in temp:
         t.insert(1, '怪物')
