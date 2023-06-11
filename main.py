@@ -15,7 +15,7 @@ class NameSearch(BaseModel):
 class NumSearch(BaseModel):
     category: str
     objects: str
-    mininum: int
+    minimum: int
     maximum: int
     
 
@@ -38,20 +38,20 @@ async def htmlQuery(category: str, request: Request):
 @app.post('/data/search_by_num')
 async def numQuery(item: NumSearch):
     
-    if item.mininum < 0 or item.maximum < 0:
+    if item.minimum < 0 or item.maximum < 0:
         return {'status': -1, 'details': '數值不得小於零'}
     
-    if item.mininum > item.maximum:
+    if item.minimum > item.maximum:
         return {'status': -1, 'details': '最小值不得大於最大值'}
     
     try:
     
         if item.category == '任務':       
-            return {'status': 200, 'details': callQuest(['', ''], ['總經驗值', item.mininum, item.maximum])}
+            return {'status': 200, 'details': callQuest(['', ''], ['總經驗值', item.minimum, item.maximum])}
             
         else:
             
-            stmt = f'WHERE {item.objects} BETWEEN {item.mininum} AND {item.maximum}'
+            stmt = f'WHERE {item.objects} BETWEEN {item.minimum} AND {item.maximum}'
             
             if item.category == '裝備':
                 return {'status': 200, 'details': callGear([stmt, stmt])}
