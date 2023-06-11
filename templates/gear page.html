@@ -99,7 +99,24 @@
             } else {
                 $("#error_message").html("輸入正確 - 正在取得資料");
             }
-
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+	    $.ajax({
+                url: "/data/" + drop_down_list,
+                type: "POST",
+		headers:{
+			'Access-Control-Allow-Origin':'*',
+			'Content-Type':'application/json'
+		},
+                data: JSON.stringify({ min: min, max: max}),  // 將 input 值作為資料傳遞給後端
+                success: function(data) {
+                    // 在前端處理後端返回的數據
+                    console.log(data);
+                },
+                error: function(error) {
+                    console.error("錯誤:", error);
+                }
+            });
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             $("#error_message").delay(200).fadeIn(200);
             console.log(min);
             console.log(max);
@@ -112,7 +129,24 @@
             } else {
                 $("#error_message").html("輸入正確 - 正在取得資料");
             }
-
+//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+	    $.ajax({
+                url: "/data/" + drop_down_list,
+                type: "POST",
+		headers:{
+			'Access-Control-Allow-Origin':'*',
+			'Content-Type':'application/json'
+		},
+                data: JSON.stringify({input: input}),  // 將 input 值作為資料傳遞給後端
+                success: function(data) {
+                    // 在前端處理後端返回的數據
+                    console.log(data);
+                },
+                error: function(error) {
+                    console.error("錯誤:", error);
+                }
+            });
+//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             $("#error_message").delay(200).fadeIn(200);
             console.log(input);
         }
