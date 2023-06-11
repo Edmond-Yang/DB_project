@@ -3,15 +3,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
-import sqlite3
+
 import uvicorn
 
 class NameSearch(BaseModel):
-    category: str 
+    category: str
+    objects: str 
     name: str
     
 class NumSearch(BaseModel):
     category: str
+    objects: str
     mininum: int
     maximum: int
     
@@ -23,8 +25,7 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-conn = sqlite3.connect('data.db')
-cursor = conn.cursor()
+
 
 @app.get('/', response_class=HTMLResponse)
 async def main(request: Request):
@@ -36,30 +37,28 @@ async def htmlQuery(category: str, request: Request):
 
 @app.post('/data/search_by_num')
 async def numQuery(item: NumSearch):
+    
+    if item.mininum < 0 or item.maximum < 0:
+        return {'status': -1, 'details': '數值不得小於零'}
+    
+    if item.mininum > item.maximum:
+        return {'status': -1, 'details': '最小值不得大於最大值'}
+    
+    
     pass
 
 @app.post('/data/search_by_name')
 async def nameQuery(item: NameSearch):
+    
+    if len(item.name) <= 0:
+        return {'status': -1, 'details': '名稱不得為空'}
+    
+    if item.name[0] == ' ':
+        return {'status': -1, 'details': '名稱開頭不得為空'}
     pass
 
 
-def executeQuery(stmt: str):
-    try:
-        new_rows = []
-        cursor.execute(stmt)
-        rows = cursor.fetchall()
-        
-        for r in rows:
-            new_rows.append(list(r))
-            
-        
-    except Exception as e:
-        
-        return {'status': -1, 'details': e}
-    
-    
-    
-    return {'status': 200, 'details': new_rows}
+
     
 
 if __name__ == '__main__':
