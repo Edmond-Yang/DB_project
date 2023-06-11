@@ -25,9 +25,13 @@ def callQuest(subStmt: list, target: list):
         t[6] = temp[cnt+3][-3]
         
         query.append(t)
+        
+    print(query)
     
     stmt = "SELECT 任務名稱, 所在地圖, 經驗值 FROM 任務 NATURAL JOIN 任務詳細 NATURAL JOIN 怪物 " + subStmt[1]
     temp = executeQuery(stmt)
+    
+    print(temp)
     
     for cnt in range(0, len(temp), 2):
             query[cnt//2] += temp[cnt][1:] + temp[cnt+1][1:]
@@ -51,15 +55,42 @@ def callQuest(subStmt: list, target: list):
         for t in test:
             if t[-1] >= target[1] and t[-1] <= target[2]:
                 query.append(t)
+        query.sort(key=lambda x : x[-1], reverse=True)
+    else:
+        query = test
         
-    query.sort(key=lambda x : x[-1], reverse=True)
-    
+    print('-'*20)
     print(query)
+    
+    table = ''
+    for q in query:
+        table+='''
+        <tr>
+            <th rowspan="2">{}</th>
+            <th>{}</th>
+            <th>{}</th>
+            <th>{}</th>
+            <th>{}</th>
+            <th>{}</th>
+            <th rowspan="2">{}</th>
+            <th rowspan="2">{}</th>
+            <th rowspan="2">{}</th>
+        </tr>
+        <tr>
+            <th>{}</th>
+            <th>{}</th>
+            <th>{}</th>
+            <th>{}</th>
+            <th>{}</th>
+        </tr>
+        '''.format(q[0], q[1], q[2], q[7], q[11], q[8], q[3], q[4], q[-1], q[5], q[6], q[9], q[12], q[10])
+    
+    return table
 
     
 def callGear(subStmt: list):
     
-    stmt = "SELECT 裝備名稱, 來源NPC名稱, 所在地圖, 攻擊力, 玩家需求等級 FROM 裝備 JOIN NPC ON NPC名稱 = 來源NPC名稱 " + subStmt[0]
+    stmt = "SELECT 裝備名稱, 來源NPC名稱, 所在地圖, 裝備.攻擊力, 玩家需求等級 FROM 裝備 JOIN NPC ON NPC名稱 = 來源NPC名稱 " + subStmt[0]
     query = executeQuery(stmt)
     
     for q in query:
@@ -73,16 +104,25 @@ def callGear(subStmt: list):
         
     query += temp
     
-    choice = -2
+    choice = None
     for cnt, attr in enumerate(['裝備.攻擊力', '玩家需求等級']):
         
         if attr in subStmt[0] or attr in subStmt[1]:
             choice = cnt+4
             break
+    if choice is not None:
+        query.sort(key=lambda x : x[choice], reverse=True)
     
-    query.sort(key=lambda x : x[choice], reverse=True)
+    table = ''
+    for q in query:
+        table += '<tr>'
+        
+        for obj in q:
+            table += '<td>' + str(obj) + '</td>'
+            
+        table += '</tr>'
     
-    print(query)
+    return table
     
 
 def callMonster(subStmt: str):
@@ -90,15 +130,26 @@ def callMonster(subStmt: str):
     stmt = "SELECT 怪物名稱, 所在地圖, 等級, 血量, 怪物.攻擊力, 防禦力, 經驗值, 裝備名稱 FROM 怪物 JOIN 裝備 ON 來源怪物名稱 = 怪物名稱 " + subStmt
     temp = executeQuery(stmt)
     
-    choice = -2
+    choice = None
     for cnt, attr in enumerate(['等級', '血量', '怪物.攻擊力', '防禦力', '經驗值']):
         
         if attr in subStmt:
             choice = cnt+2
             break
         
-    temp.sort(key=lambda x : x[choice], reverse=True)
-    print(temp)
+    if choice is not None:
+        temp.sort(key=lambda x : x[choice], reverse=True)
+    
+    table = ''
+    for t in temp:
+        table += '<tr>'
+        
+        for obj in t:
+            table += '<td>' + str(obj) + '</td>'
+            
+        table += '</tr>'
+    
+    return table
     
 
 def callNPC(subStmt: str):
@@ -106,7 +157,16 @@ def callNPC(subStmt: str):
     stmt = "SELECT NPC名稱, 所在地圖, 裝備名稱 FROM NPC JOIN 裝備 ON 來源NPC名稱 = NPC名稱 " + subStmt
     temp = executeQuery(stmt)
     
-    print(temp)
+    table = ''
+    for t in temp:
+        table += '<tr>'
+        
+        for obj in t:
+            table += '<td>' + str(obj) + '</td>'
+            
+        table += '</tr>'
+    
+    return table
 
 
 def executeQuery(stmt: str):
@@ -128,7 +188,7 @@ def executeQuery(stmt: str):
     return new_rows
 
 if __name__ == '__main__':
-    callQuest(['',''], ['NPC', '美髮師娜塔麗'])
+    callQuest(["WHERE 任務名稱 LIKE '%古代神之聖所在%' OR 前置任務 LIKE '%古代神之聖所在%'","WHERE 任務名稱 LIKE '%古代神之聖所在%' OR 前置任務 LIKE '%古代神之聖所在%'"], ['', ''])
     # callGear(['', ''])
     # callNPC([''])
     # callMonster([''])

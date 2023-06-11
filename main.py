@@ -47,27 +47,25 @@ async def numQuery(item: NumSearch):
     try:
     
         if item.category == '任務':       
-            callQuest(['', ''], ['總經驗值', item.mininum, item.maximum])
+            return {'status': 200, 'details': callQuest(['', ''], ['總經驗值', item.mininum, item.maximum])}
             
         else:
             
             stmt = f'WHERE {item.objects} BETWEEN {item.mininum} AND {item.maximum}'
             
             if item.category == '裝備':
-                callGear([stmt*2])
+                return {'status': 200, 'details': callGear([stmt, stmt])}
                         
             elif item.category == 'NPC':
-                callNPC(stmt)
+                return {'status': 200, 'details': callNPC(stmt)}
                 
             elif item.category == '怪物':
-                callMonster(stmt)
+                return {'status': 200, 'details': callMonster(stmt)}
                 
     except Exception as e:
-        print(e)
+        return {'status': -1, 'details': e}
     
     
-    
-
 @app.post('/data/search_by_name')
 async def nameQuery(item: NameSearch):
     
@@ -85,16 +83,16 @@ async def nameQuery(item: NameSearch):
         
         if '任務' in item.objects:
             stmt = f"WHERE 任務名稱 LIKE '%{item.name}%' OR 前置任務 LIKE '%{item.name}%'"
-            subQuery += [stmt*2]
-            target += [''*2]
+            subQuery += [stmt, stmt]
+            target += ['', '']
         else:
-            subQuery += [''*2]
+            subQuery += ['', '']
             target += [item.objects, item.name]
         
         try:
-            callQuest(subQuery, target)
+            return {'status': 200, 'details': callQuest(subQuery, target)}
         except Exception as e:
-            print(e)
+            return {'status': -1, 'details': e}
         
     else:
         stmt = f"WHERE {item.objects} LIKE '%{item.name}%'"
@@ -103,23 +101,23 @@ async def nameQuery(item: NameSearch):
             if item.category == '裝備':
                 
                 if 'NPC' in item.objects:
-                    callGear([stmt, ''])
+                    return {'status': 200, 'details': callGear([stmt, ''])}
                 elif '怪物' in item.objects:
-                    callGear(['', stmt])
+                    return {'status': 200, 'details': callGear(['', stmt])}
                 else:
-                    callGear([stmt*2])
+                    return {'status': 200, 'details': callGear([stmt, stmt])}
                     
             elif item.category == 'NPC':
-                callNPC(stmt)
+                return {'status': 200, 'details': callNPC(stmt)}
                 
             elif item.category == '怪物':
-                callMonster(stmt)
+                return {'status': 200, 'details': callMonster(stmt)}
             
             else:
-                pass
+                return {'status': -1, 'details': 'error occur'}
                 
         except Exception as e:
-            print(e)
+            return  {'status': -1, 'details': e}
         
     
 if __name__ == '__main__':

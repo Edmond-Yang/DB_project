@@ -32,9 +32,9 @@
     <div id="gear_search_part">
         <select id="search_by_what">
             <option value="">請選擇查詢方式</option>
-            <option value="search_by_name">以NPC名查詢</option>
-            <option value="search_by_place">以所在地點查詢</option>
-            <option value="search_by_gear">以取得裝備查詢</option>
+            <option value="NPC名稱_name">以NPC名查詢</option>
+            <option value="所在地圖_name">以所在地點查詢</option>
+            <option value="裝備名稱_name">以取得裝備查詢</option>
         </select>
 
         <input type="text" id="text_input">
@@ -51,6 +51,7 @@
                 <th>取得裝備</th>
             </tr>
         </thead>
+        <tbody></tbody>
     </table>
 </body>
 
@@ -62,11 +63,11 @@
         $("#text_input, #submit").hide();
 
         let drop_down_list = $("#search_by_what").val();
-        if(drop_down_list == "search_by_name") {
+        if(drop_down_list == "NPC名稱_name") {
             $("#text_input").val("").attr('placeholder', "請輸入NPC名").delay(200).fadeIn(200);
-        } else if(drop_down_list == "search_by_place") {
+        } else if(drop_down_list == "所在地圖_name") {
             $("#text_input").val("").attr('placeholder', "請輸入地圖名稱").delay(200).fadeIn(200);
-        } else if(drop_down_list == "search_by_gear") {
+        } else if(drop_down_list == "裝備名稱_name") {
             $("#text_input").val("").attr('placeholder', "請輸入裝備名稱").delay(200).fadeIn(200);
         }
 
@@ -83,30 +84,41 @@
         let input = $("#text_input").val();
         if(input.length == 0) {
             $("#error_message").html("輸入錯誤 - 不能為空");
+            $("#error_message").delay(200).fadeIn(200);
+            return
         } else if(parseInt(input[0]) >= 0 && parseInt(input[0]) <= 9){
             $("#error_message").html("輸入錯誤 - 開頭不能為數字");
+            $("#error_message").delay(200).fadeIn(200);
+            return
         } else {
             $("#error_message").html("輸入正確 - 正在取得資料");
+            $("#error_message").delay(200).fadeIn(200);
         }
 //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 	    $.ajax({
-                url: "/data/" + drop_down_list,
+                url: "/data/search_by_" + drop_down_list.split('_')[1],
                 type: "POST",
-		headers:{
-			'Access-Control-Allow-Origin':'*',
-			'Content-Type':'application/json'
-		},
-                data: JSON.stringify({input: input}),  // 將 input 值作為資料傳遞給後端
+                headers:{
+                    'Access-Control-Allow-Origin':'*',
+                    'Content-Type':'application/json'
+                },
+                data: JSON.stringify({ category:'NPC', objects: drop_down_list.split('_')[0] ,name: input}),  // 將 input 值作為資料傳遞給後端
                 success: function(data) {
-                    // 在前端處理後端返回的數據
-                    console.log(data);
+                    console.log(data)
+                    console.log(typeof(data))
+                    if(data['status'] == -1){
+                        alert(data['details'])
+                    }
+                    else{
+                        $('tbody').html(data['details'])
+                    }
                 },
                 error: function(error) {
                     console.error("錯誤:", error);
                 }
             });
 //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        $("#error_message").delay(200).fadeIn(200);
+        
         console.log(input);
     });
 </script>
