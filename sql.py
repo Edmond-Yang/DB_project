@@ -110,8 +110,11 @@ def callGear(subStmt: list):
         if attr in subStmt[0] or attr in subStmt[1]:
             choice = cnt+4
             break
+        
     if choice is not None:
         query.sort(key=lambda x : x[choice], reverse=True)
+        
+    print(query)
     
     table = ''
     for q in query:
