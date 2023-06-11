@@ -80,6 +80,7 @@
 
     $("#submit").click(function() {
         $("#error_message").hide();
+        let drop_down_list = $("#search_by_what").val();
 
         let input = $("#text_input").val();
         if(input.length == 0) {
@@ -102,7 +103,7 @@
                     'Access-Control-Allow-Origin':'*',
                     'Content-Type':'application/json'
                 },
-                data: JSON.stringify({ category:'NPC', objects: drop_down_list.split('_')[0] ,name: input}),  // 將 input 值作為資料傳遞給後端
+                data: JSON.stringify({ category:'NPC', objects: drop_down_list.split('_')[0] , name: input}),  // 將 input 值作為資料傳遞給後端
                 success: function(data) {
                     console.log(data)
                     console.log(typeof(data))

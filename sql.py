@@ -132,7 +132,7 @@ def callGear(subStmt: list):
 
 def callMonster(subStmt: str):
     
-    stmt = "SELECT 怪物名稱, 所在地圖, 等級, 血量, 怪物.攻擊力, 防禦力, 經驗值, 裝備名稱 FROM 怪物 JOIN 裝備 ON 來源怪物名稱 = 怪物名稱 " + subStmt
+    stmt = "SELECT 怪物名稱, 所在地圖, 等級, 血量, 怪物.攻擊力, 防禦力, 經驗值, 裝備名稱 FROM 怪物 LEFT JOIN 裝備 ON 來源怪物名稱 = 怪物名稱 " + subStmt
     temp = executeQuery(stmt)
     
     choice = None
@@ -150,7 +150,11 @@ def callMonster(subStmt: str):
         table += '<tr>'
         
         for obj in t:
-            table += '<td>' + str(obj) + '</td>'
+            
+            if obj is None:
+                table += '<td>' + str('') + '</td>'
+            else:
+                table += '<td>' + str(obj) + '</td>'
             
         table += '</tr>'
     
@@ -159,15 +163,20 @@ def callMonster(subStmt: str):
 
 def callNPC(subStmt: str):
     
-    stmt = "SELECT NPC名稱, 所在地圖, 裝備名稱 FROM NPC JOIN 裝備 ON 來源NPC名稱 = NPC名稱 " + subStmt
+    stmt = "SELECT NPC名稱, 所在地圖, 裝備名稱 FROM NPC LEFT JOIN 裝備 ON 來源NPC名稱 = NPC名稱 " + subStmt
     temp = executeQuery(stmt)
+    
+    print(subStmt)
     
     table = ''
     for t in temp:
         table += '<tr>'
         
         for obj in t:
-            table += '<td>' + str(obj) + '</td>'
+            if obj is None:
+                table += '<td>' + str('') + '</td>'
+            else:
+                table += '<td>' + str(obj) + '</td>'
             
         table += '</tr>'
     
