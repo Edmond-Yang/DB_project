@@ -6,27 +6,47 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         var dict = {
-            'quest': "{{url_for('htmlQuery', category='quest')}}", 
-            'gear': "{{url_for('htmlQuery', category='gear')}}", 
-            'NPC': "{{url_for('htmlQuery', category='NPC')}}", 
-            'monster':"{{url_for('htmlQuery', category='monster')}}"
+            'quest': "{{url_for('htmlQuery', category='quest')}}",
+            'gear': "{{url_for('htmlQuery', category='gear')}}",
+            'NPC': "{{url_for('htmlQuery', category='NPC')}}",
+            'monster': "{{url_for('htmlQuery', category='monster')}}"
         }
-        function getURL(name){
+        function getURL(name) {
             return dict[name]
         }
     </script>
     <link rel="icon" href="{{ url_for('static', path='/img/maple.png') }}">
-    <!--<link rel="stylesheet" href="../General Style.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/Style.css') }}">
 </head>
 
 <body>
-    <a href="{{ url_for('main') }}"><img src="{{ url_for('static', path='/img/Maple Story.jpg') }}"></a>
+    <div class="header">
+        <div class="promotion">
+            <a href="{{ url_for('main') }}"><img src="{{ url_for('static', path='/img/Maple Story.jpg') }}"></a>
+        </div>
+    </div>
 
-    <div class="main_function">
-        <input type="button" onclick="location.href=getURL('quest');" value="任務查詢">
-        <input type="button" onclick="location.href=getURL('gear');" value="裝備查詢">
-        <input type="button" onclick="location.href=getURL('NPC');" value="NPC查詢">
-        <input type="button" onclick="location.href=getURL('monster');" value="怪物查詢">
+    <div class="container">
+        <div class="main_function">
+            <div class="nav">
+                <table cellspacing="5" cellpadding="0">
+                    <tr>
+                        <td>
+                            <a onclick="location.href=getURL('quest');">任務查詢</a>
+                        </td>
+                        <td>
+                            <a onclick="location.href=getURL('gear');">裝備查詢</a>
+                        </td>
+                        <td>
+                            <a onclick="location.href=getURL('NPC');">NPC查詢</a>
+                        </td>
+                        <td>
+                            <a onclick="location.href=getURL('monster');">怪物查詢</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </body>
 

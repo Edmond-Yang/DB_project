@@ -6,101 +6,125 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         var dict = {
-            'quest': "{{url_for('htmlQuery', category='quest')}}", 
-            'gear': "{{url_for('htmlQuery', category='gear')}}", 
-            'NPC': "{{url_for('htmlQuery', category='NPC')}}", 
-            'monster':"{{url_for('htmlQuery', category='monster')}}"
+            'quest': "{{url_for('htmlQuery', category='quest')}}",
+            'gear': "{{url_for('htmlQuery', category='gear')}}",
+            'NPC': "{{url_for('htmlQuery', category='NPC')}}",
+            'monster': "{{url_for('htmlQuery', category='monster')}}"
         }
-        function getURL(name){
+        function getURL(name) {
             return dict[name]
         }
     </script>
     <link rel="icon" href="{{ url_for('static', path='/img/maple.png') }}">
-    <!--<link rel="stylesheet" href="../General Style.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/Style.css') }}">
 </head>
 
 <body>
-    <a href="{{ url_for('main') }}"><img src="{{ url_for('static', path='/img/little logo.png') }}"></a>
-
-    <div class="main_function">
-        <input type="button" onclick="location.href=getURL('quest');" value="任務查詢">
-        <input type="button" onclick="location.href=getURL('gear');" value="裝備查詢">
-        <input type="button" onclick="location.href=getURL('NPC');" value="NPC查詢">
-        <input type="button" onclick="location.href=getURL('monster');" value="怪物查詢">
+    <div class="back-top hide" title="回頂部"></div>
+    <div class="header">
+        <div id="logo">
+            <a href="{{ url_for('main') }}"><img src="{{ url_for('static', path='/img/little logo.png') }}"></a>
+        </div>
     </div>
+    <img src="{{ url_for('static', path='/img/bottom-dec.png') }}" alt="Your Image" class="bottom-img">
 
-    <div id="gear_search_part">
-        <select id="search_by_what">
-            <option value="">請選擇查詢方式</option>
-            <option value="裝備名稱_name">以裝備名稱查詢</option>
-            <option value="NPC名稱_name">以獲得NPC查詢</option>
-            <option value="怪物名稱_name">以掉落怪物查詢</option>
-            <option value="裝備.攻擊力_num">以攻擊力查詢</option>
-            <option value="玩家需求等級_num">以玩家需求等級查詢</option>
-        </select>
+    <div class="container">
+        <div class="main_function">
+            <div class="nav">
+                <table cellspacing="5" cellpadding="0">
+                    <tr>
+                        <td>
+                            <a onclick="location.href=getURL('quest');">任務查詢</a>
+                        </td>
+                        <td>
+                            <a onclick="location.href=getURL('gear');">裝備查詢</a>
+                        </td>
+                        <td>
+                            <a onclick="location.href=getURL('NPC');">NPC查詢</a>
+                        </td>
+                        <td>
+                            <a onclick="location.href=getURL('monster');">怪物查詢</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-        <p id="max_input">最小值 : <input type="number" id="num_min"></p>
-        <p id="min_input">最大值 : <input type="number" id="num_max"></p>
-        <input type="text" id="text_input">
-        <input type="submit" value="送出" id="submit">
+        <div id="gear_search_part" class="search_part">
+            <select id="search_by_what">
+                <option value="">請選擇查詢方式</option>
+                <option value="裝備名稱_name">以裝備名稱查詢</option>
+                <option value="NPC名稱_name">以獲得NPC查詢</option>
+                <option value="怪物名稱_name">以掉落怪物查詢</option>
+                <option value="裝備.攻擊力_num">以攻擊力查詢</option>
+                <option value="玩家需求等級_num">以玩家需求等級查詢</option>
+            </select>
 
-        <p id="error_message"></p>
+            <p id="max_input">最小值 : <input type="number" id="num_min"></p>
+            <p id="min_input">最大值 : <input type="number" id="num_max"></p>
+            <input type="text" id="text_input">
+            <input type="submit" value="送出" id="submit">
+
+            <p id="error_message"></p>
+        </div>
+
+        <div class="data_table">
+            <table id="data_part" style="border:3px #cccccc solid;" cellpadding="10" border='1'>
+                <thead>
+                    <tr>
+                        <th>裝備名稱</th>
+                        <th>來源種類(NPC/怪物掉落)</th>
+                        <th>來源對象</th>
+                        <th>來源對象所在地</th>
+                        <th>攻擊力</th>
+                        <th>玩家需求等級</th>
+                    </tr>
+                </thead>
+                <tbody id="data_update"></tbody>
+            </table>
+        </div>
     </div>
-
-    <table id="data_part" style="border:3px #cccccc solid;" cellpadding="10" border='1'>
-        <thead>
-            <tr>
-                <th>裝備名稱</th>
-                <th>來源種類(NPC/怪物掉落)</th>
-                <th>來源對象</th>
-                <th>來源對象所在地</th>
-                <th>攻擊力</th>
-                <th>玩家需求等級</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
 </body>
 
 <script>
     $("#max_input, #min_input, #text_input, #submit").hide();
     $("#error_message").hide();
 
-    $("#search_by_what").change(function() {
+    $("#search_by_what").change(function () {
         $("#max_input, #min_input, #text_input, #submit").hide();
 
         let drop_down_list = $("#search_by_what").val();
-        
-        if(drop_down_list == "裝備.攻擊力_num" || drop_down_list == "玩家需求等級_num") {
+
+        if (drop_down_list == "裝備.攻擊力_num" || drop_down_list == "玩家需求等級_num") {
             $("#max_input, #min_input").delay(200).fadeIn(200);
-        } else if(drop_down_list == "裝備名稱_name") {
+        } else if (drop_down_list == "裝備名稱_name") {
             $("#text_input").val("").attr('placeholder', "請輸入裝備名稱").delay(200).fadeIn(200);
-        } else if(drop_down_list == "NPC名稱_name") {
+        } else if (drop_down_list == "NPC名稱_name") {
             $("#text_input").val("").attr('placeholder', "請輸入NPC名稱").delay(200).fadeIn(200);
-        } else if(drop_down_list == "怪物名稱_name") {
+        } else if (drop_down_list == "怪物名稱_name") {
             $("#text_input").val("").attr('placeholder', "請輸入怪物名稱").delay(200).fadeIn(200);
         }
 
-        if(drop_down_list != "") {
+        if (drop_down_list != "") {
             $("#submit").delay(200).fadeIn(200);
         }
 
         $("#error_message").hide();
     });
 
-    $("#submit").click(function() {
+    $("#submit").click(function () {
         $("#error_message").hide();
         let drop_down_list = $("#search_by_what").val();
         console.log(drop_down_list.includes('num'))
-        if(drop_down_list.includes('num')) {
+        if (drop_down_list.includes('num')) {
             let min = parseInt($("#num_min").val());
             let max = parseInt($("#num_max").val());
-            
+
             if (min <= 0 || max <= 0) {
                 $("#error_message").html("輸入錯誤 - 最大值與最小值必須大於0");
                 $("#error_message").delay(200).fadeIn(200);
                 return
-            } else if(min > max) {
+            } else if (min > max) {
                 $("#error_message").html("輸入錯誤 - 最大值必須大於/等於最小值");
                 $("#error_message").delay(200).fadeIn(200);
                 return
@@ -108,40 +132,40 @@
                 $("#error_message").html("輸入正確 - 正在取得資料");
                 $("#error_message").delay(200).fadeIn(200);
             }
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-	    $.ajax({
+            //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            $.ajax({
                 url: "/data/search_by_" + drop_down_list.split('_')[1],
                 type: "POST",
-                headers:{
-                    'Access-Control-Allow-Origin':'*',
-                    'Content-Type':'application/json'
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
                 },
-                data: JSON.stringify({ category:'裝備', objects: drop_down_list.split('_')[0], minimum: min, maximum: max}),  // 將 input 值作為資料傳遞給後端
-                success: function(data) {
+                data: JSON.stringify({ category: '裝備', objects: drop_down_list.split('_')[0], minimum: min, maximum: max }),  // 將 input 值作為資料傳遞給後端
+                success: function (data) {
                     console.log(data)
-                    console.log(typeof(data))
-                    if(data['status'] == -1){
+                    console.log(typeof (data))
+                    if (data['status'] == -1) {
                         alert(data['details'])
                     }
-                    else{
-                        $('tbody').html(data['details'])
+                    else {
+                        $('#data_update').html(data['details'])
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     console.error("錯誤:", error);
                 }
             });
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            
+            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
             console.log(min);
             console.log(max);
         } else {
             let input = $("#text_input").val();
-            if(input.length === 0) {
+            if (input.length === 0) {
                 $("#error_message").html("輸入錯誤 - 不能為空");
                 $("#error_message").delay(200).fadeIn(200);
                 return
-            } else if(parseInt(input[0]) >= 0 && parseInt(input[0]) <= 9){
+            } else if (parseInt(input[0]) >= 0 && parseInt(input[0]) <= 9) {
                 $("#error_message").html("輸入錯誤 - 開頭不能為數字");
                 $("#error_message").delay(200).fadeIn(200);
                 return
@@ -149,33 +173,57 @@
                 $("#error_message").html("輸入正確 - 正在取得資料");
                 $("#error_message").delay(200).fadeIn(200);
             }
-            
-//vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-	    $.ajax({
+
+            //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+            $.ajax({
                 url: "/data/search_by_" + drop_down_list.split('_')[1],
                 type: "POST",
-                headers:{
-                    'Access-Control-Allow-Origin':'*',
-                    'Content-Type':'application/json'
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json'
                 },
-                data: JSON.stringify({ category:'裝備', objects: drop_down_list.split('_')[0] ,name: input}),  // 將 input 值作為資料傳遞給後端
-                success: function(data) {
+                data: JSON.stringify({ category: '裝備', objects: drop_down_list.split('_')[0], name: input }),  // 將 input 值作為資料傳遞給後端
+                success: function (data) {
                     console.log(data)
-                    console.log(typeof(data))
-                    if(data['status'] == -1){
+                    console.log(typeof (data))
+                    if (data['status'] == -1) {
                         alert(data['details'])
                     }
-                    else{
-                        $('tbody').html(data['details'])
+                    else {
+                        $('#data_update').html(data['details'])
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     console.error("錯誤:", error);
                 }
             });
-//^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            
+            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
         }
+    });
+
+    /*back-top*/
+    $(document).ready(function () {
+        // 捲軸偵測距離頂部超過 50 才顯示按鈕
+        $(window).scroll(function () {
+            if ($(window).scrollTop() > 50) {
+                if ($(".back-top").hasClass("hide")) {
+                    $(".back-top").toggleClass("hide");
+                }
+            } else {
+                $(".back-top").addClass("hide");
+            }
+        });
+
+        // 點擊按鈕回頂部
+        $(".back-top").on("click", function (event) {
+            $("html, body").animate(
+                {
+                    scrollTop: 0
+                },
+                500 // 回頂部時間為 500 毫秒
+            );
+        });
     });
 </script>
 

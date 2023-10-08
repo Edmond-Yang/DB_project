@@ -202,7 +202,7 @@ def executeQuery(stmt: str):
     return new_rows
 
 if __name__ == '__main__':
-    callQuest(["WHERE 任務名稱 LIKE '%古代神之聖所在%' OR 前置任務 LIKE '%古代神之聖所在%'","WHERE 任務名稱 LIKE '%古代神之聖所在%' OR 前置任務 LIKE '%古代神之聖所在%'"], ['', ''])
-    # callGear(['', ''])
+    # callQuest(["WHERE 任務名稱 LIKE '%古代神之聖所在%' OR 前置任務 LIKE '%古代神之聖所在%'","WHERE 任務名稱 LIKE '%古代神之聖所在%' OR 前置任務 LIKE '%古代神之聖所在%'"], ['', ''])
+    callGear(['', ''])
     # callNPC([''])
     # callMonster([''])
